@@ -1,0 +1,68 @@
+//文件管理界面
+<script setup>
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
+
+const files = ref([]);
+
+function downloadFile(fileId) {
+}
+
+function likeFile(fileId) {
+}
+
+function deleteFile(fileId) {
+}
+
+export {
+  files,
+  downloadFile,
+  likeFile,
+  deleteFile
+};
+
+import { files, downloadFile, likeFile, deleteFile } from './path/to/FileManagement'
+
+onMounted(async () => {
+  try {
+    const response = await axios.get('/api/files');
+    files.value = response.data;
+  } catch (error) {
+    console.error('Failed to fetch files:', error);
+  }
+});
+</script>
+
+<template>
+  <v-container>
+    <v-row>
+      <v-col cols="12">
+        <h2 class="text-h5">文件管理</h2>
+        <v-divider></v-divider>
+      </v-col>
+      <v-col v-for="file in files" :key="file.id" cols="12" sm="6" md="4">
+        <v-card>
+          <v-card-title>{{ file.name }}</v-card-title>
+          <v-card-subtitle>上传者: {{ file.ownerName }}</v-card-subtitle>
+          <v-card-text>
+            <v-progress-linear :value="file.downloadProgress" color="blue"></v-progress-linear>
+            <p>下载次数: {{ file.downloadCount }}</p>
+            <p>点赞数: {{ file.likeCount }}</p>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn icon @click="downloadFile(file.id)">
+              <v-icon>mdi-cloud-download</v-icon>
+            </v-btn>
+            <v-btn icon @click="likeFile(file.id)">
+              <v-icon>mdi-thumb-up</v-icon>
+            </v-btn>
+            <v-spacer></v-spacer>
+            <v-btn icon @click="deleteFile(file.id)">
+              <v-icon>mdi-delete</v-icon>
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
