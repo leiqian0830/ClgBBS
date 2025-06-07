@@ -1,0 +1,70 @@
+//管理界面
+<script setup>
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
+
+const pendingFiles = ref([]);
+
+function approveFile(fileId) {
+  // Your implementation here
+}
+
+function rejectFile(fileId) {
+  // Your implementation here
+}
+
+export {
+  pendingFiles,
+  approveFile,
+  rejectFile
+};
+
+import { pendingFiles, approveFile, rejectFile } from './path/to/AdminInterface'
+
+onMounted(async () => {
+  try {
+    const response = await axios.get('/api/admin/pending-files');
+    pendingFiles.value = response.data;
+  } catch (error) {
+    console.error('Failed to fetch pending files:', error);
+  }
+});
+
+</script>
+
+<template>
+<v-container>
+    <v-row>
+      <v-col cols="12">
+        <h2 class="text-h5">管理员界面</h2>
+        <v-divider></v-divider>
+      </v-col>
+      <v-col cols="12">
+        <v-card>
+          <v-card-title>待审核的文件</v-card-title>
+          <v-card-text>
+            <v-list dense>
+              <template v-for="file in pendingFiles" :key="file.id">
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title>{{ file.name }}</v-list-item-title>
+                    <v-list-item-subtitle>举报人: {{ file.reporterName }}</v-list-item-subtitle>
+                    <v-list-item-subtitle>举报原因: {{ file.reason }}</v-list-item-subtitle>
+                  </v-list-item-content>
+                  <v-list-item-action>
+                    <v-btn icon @click="approveFile(file.id)">
+                      <v-icon>mdi-check</v-icon>
+                    </v-btn>
+                    <v-btn icon @click="rejectFile(file.id)">
+                      <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                  </v-list-item-action>
+                </v-list-item>
+              </template>
+            </v-list>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
