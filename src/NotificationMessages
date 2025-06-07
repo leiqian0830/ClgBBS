@@ -1,0 +1,55 @@
+//查看通知消息
+<script setup>
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
+
+const notifications = ref([]);
+
+function fetchNotifications() {
+  // Your implementation here
+}
+
+export {
+  notifications,
+  fetchNotifications
+};
+
+import { notifications, fetchNotifications } from './path/to/NotificationMessages'
+
+onMounted(async () => {
+  try {
+    await fetchNotifications();
+  } catch (error) {
+    console.error('Failed to fetch notifications:', error);
+  }
+});
+
+function formatDateTime(value) {
+  if (!value) return '';
+  return new Date(value).toLocaleString(); // 格式化日期时间
+}
+</script>
+
+<template>
+  <v-container>
+    <v-row>
+      <v-col cols="12">
+        <h2 class="text-h5">通知消息</h2>
+        <v-divider></v-divider>
+      </v-col>
+      <v-col cols="12">
+        <v-card>
+          <v-card-title>新的通知消息</v-card-title>
+          <v-card-text>
+            <ul v-if="notifications.length > 0">
+              <li v-for="notification in notifications" :key="notification.id">
+                <strong>{{ notification.type }}:</strong> {{ notification.message }} - 来自: {{ notification.userName }} - 时间: {{ formatDateTime(notification.timestamp) }}
+              </li>
+            </ul>
+            <p v-else>没有新的通知消息。</p>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
